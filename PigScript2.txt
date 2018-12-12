@@ -1,0 +1,7 @@
+data = LOAD 'spark_assignment/input_dataset/yellow_tripdata_*' USING
+PigStorage(',') AS (f1:int, f2:chararray, f3:chararray, f4:int,
+f5:double, f6:int, f7:bytearray,
+f8:int, f9:int, f10:int, f11:double, f12:double, f13:double, f14:double,
+f15:double, f16:double, f17:double);
+filtered = FILTER data BY f6 == 4;
+STORE filtered INTO 'pigoutput/PigOutput2.out';

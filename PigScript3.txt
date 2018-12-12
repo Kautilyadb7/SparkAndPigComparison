@@ -1,0 +1,26 @@
+data = LOAD 'spark_assignment/input_dataset/yellow_tripdata_*' USING
+PigStorage(',') AS (VendorID,
+tpep_pickup_datetime,
+tpep_dropoff_datetime,
+passenger_count,
+trip_distance,
+RatecodeID,
+store_and_fwd_flag,
+PULocationID,
+DOLocationID,
+payment_type,
+fare_amount,
+extra, 
+mta_tax,
+tip_amount,
+tolls_amount,
+improvement_surcharge,
+total_amount
+);
+data_not_null = FILTER data BY payment_type != '';
+grouped_data = GROUP data_not_null by payment_type;
+group_count = FOREACH grouped_data GENERATE group AS PAYMENT_TYPE,
+COUNT_STAR(data_not_null) AS cnt;
+sorted_count = ORDER group_count BY cnt;
+result_without_header = FILTER sorted_count BY $0 != 'payment_type';
+STORE result_without_header INTO 'pigoutput/PigOutput3.out'; 
